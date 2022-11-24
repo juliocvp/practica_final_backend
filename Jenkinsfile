@@ -49,6 +49,7 @@ spec:
                         writeMavenPom file: "pom.xml", model: pom
 
                         echo 'Pushing changes to repo'
+                        sh 'git show-ref'
                         sh 'git add .'
                         sh 'git commit -m "Removing -SNAPSHOT suffix"'
                         sh ' git push origin master'
