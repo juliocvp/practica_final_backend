@@ -44,7 +44,7 @@ spec:
                     echo 'Checking pom version'
                     pom = readMavenPom file: "pom.xml"
                     if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
-                        sh 'git pull'
+                        sh 'git pull master'
                         echo 'Removing -SNAPSHOT suffix'
                         pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
                         writeMavenPom file: "pom.xml", model: pom
