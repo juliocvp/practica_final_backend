@@ -77,5 +77,13 @@ spec:
                 jacoco()
             }
         }
+
+        stage("Quality Tests") {
+            steps {
+                withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
+                    sh "mvn clean verify sonar:sonar -DskipTests"
+                }
+            }
+        }
     }
 }
