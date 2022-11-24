@@ -51,6 +51,8 @@ spec:
                         writeMavenPom file: "pom.xml", model: pom
 
                         echo 'Pushing changes to repo'
+                        sh 'git config --global user.email "jenkins@jenkins.com"'
+                        sh 'git config --global user.name "Jenkins"'
                         sh 'git add .'
                         sh 'git commit -m "Removing -SNAPSHOT suffix"'
                         sh 'git push origin master'
