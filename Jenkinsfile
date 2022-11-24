@@ -44,7 +44,6 @@ spec:
                     echo 'Checking pom version'
                     pom = readMavenPom file: "pom.xml"
                     if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
-                        //sh 'git pull master'
                         echo 'Removing -SNAPSHOT suffix'
                         pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
                         writeMavenPom file: "pom.xml", model: pom
@@ -53,11 +52,29 @@ spec:
                         sh 'git show-ref'
                         sh 'git add .'
                         sh 'git commit -m "Removing -SNAPSHOT suffix"'
-                        sh ' git push origin master'
+                        //sh ' git push origin master'
                     } else {
                         echo 'Correct pom version'
                     }
                 }
+            }
+        }
+        stage('Compile') {
+            steps {
+                sh "mvn clean package -DskipTest"
+            }
+        }
+
+        stage("Unit Tests") {
+            steps {
+                sh "mvn test"
+                junit "target/surefire-reports/*.xml"
+            }
+        }
+
+        stage("JaCoCo Tests") {
+            steps {
+                jacoco()
             }
         }
     }
