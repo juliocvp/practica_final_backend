@@ -30,9 +30,7 @@ spec:
     stages {
         stage('Prepare environment') {
             steps {
-                echo 'java -version :'
                 sh 'java -version'
-                echo 'mvn --version :'
                 sh 'mvn --version'
             }
         }
@@ -55,7 +53,7 @@ spec:
                         sh 'git config --global user.name "Jenkins"'
                         sh 'git add .'
                         sh 'git commit -m "Removing -SNAPSHOT suffix"'
-                        sh 'git push origin master'
+                        sh 'git push'
                     } else {
                         echo 'Correct pom version'
                     }
