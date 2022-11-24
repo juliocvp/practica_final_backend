@@ -49,6 +49,7 @@ spec:
                         writeMavenPom file: "pom.xml", model: pom
 
                         echo 'Pushing changes to repo'
+                        sh 'pwd'
                         sh 'git config --global user.email "jenkins@jenkins.com"'
                         sh 'git config --global user.name "Jenkins"'
                         sh 'git add .'
