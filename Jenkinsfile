@@ -50,6 +50,7 @@ spec:
 
                         echo 'Pushing changes to repo'
                         sh 'pwd'
+                        sh 'ls'
                         sh 'git config --global user.email "jenkins@jenkins.com"'
                         sh 'git config --global user.name "Jenkins"'
                         sh 'git add .'
