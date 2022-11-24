@@ -51,7 +51,7 @@ spec:
                         echo 'Pushing changes to repo'
                         sh 'git add .'
                         sh 'git commit -m "Removing -SNAPSHOT suffix"'
-                        sh ' git push origin HEAD:master'
+                        sh ' git push origin master'
                     } else {
                         echo 'Correct pom version'
                     }
