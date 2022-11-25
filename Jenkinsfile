@@ -34,14 +34,12 @@ spec:
     }
 
     stages {
-        // stage('Prepare environment') {
-        //     steps {
-        //         container("shell") {
-        //             sh 'java -version'
-        //             sh 'mvn --version'
-        //         }
-        //     }
-        // }
+        stage('Prepare environment') {
+            steps {
+                sh 'java -version'
+                sh 'mvn --version'
+            }
+        }
         stage('Code Promotion') {
             when {
                 branch 'master'
@@ -49,53 +47,43 @@ spec:
             }
             steps {
                 script {
-                    container("shell") {
-                        echo 'Checking pom version'
-                        pom = readMavenPom file: "pom.xml"
-                        if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
-                            echo 'Removing -SNAPSHOT suffix'
-                            pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
-                            writeMavenPom file: "pom.xml", model: pom
+                    echo 'Checking pom version'
+                    pom = readMavenPom file: "pom.xml"
+                    if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
+                        echo 'Removing -SNAPSHOT suffix'
+                        pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
+                        writeMavenPom file: "pom.xml", model: pom
 
-                            echo 'Pushing changes to repo'
-                            sh 'git show-ref'
-                            sh 'git add .'
-                            sh 'git commit -m "Removing -SNAPSHOT suffix"'
-                            //sh ' git push origin master'
-                        } else {
-                            echo 'Correct pom version'
-                        }
+                        echo 'Pushing changes to repo'
+                        sh 'git show-ref'
+                        sh 'git add .'
+                        sh 'git commit -m "Removing -SNAPSHOT suffix"'
+                        //sh ' git push origin master'
+                    } else {
+                        echo 'Correct pom version'
                     }
                 }
             }
         }
         stage('Compile') {
             steps {
-                container("shell") {
-                    sh "mvn compile -DskipTest"
-                }
+                sh "mvn compile -DskipTest"
             }
         }
-        // stage("Unit Tests") {
-        //     steps {
-        //         container("shell") {
-        //             sh "mvn test"
-        //             junit "target/surefire-reports/*.xml"
-        //         }
-        //     }
-        // }
-        // stage("JaCoCo Tests") {
-        //     steps {
-        //         container("shell") {
-        //             jacoco()
-        //         }
-        //     }
-        // }
+        stage("Unit Tests") {
+            steps {
+                sh "mvn test"
+                junit "target/surefire-reports/*.xml"
+            }
+        }
+        stage("JaCoCo Tests") {
+            steps {
+                jacoco()
+            }
+        }
         stage("Quality Tests") {
             steps {
-                container("shell") {
-                    echo 'Saltado por velocidad'
-                }
+                echo 'Saltado por velocidad'
                 //withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
                     //sh "mvn clean verify sonar:sonar -DskipTests"
                 //}
@@ -103,9 +91,7 @@ spec:
         }
         stage('Package') {
             steps {
-                container("shell") {
-                    sh "mvn clean package -DskipTests"
-                }
+                sh "mvn clean package -DskipTests"
             }
         }
         stage('Build & Push') {
