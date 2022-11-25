@@ -108,6 +108,9 @@ spec:
             '''
                 }
             }
+            options {
+                skipDefaultCheckout()
+            } 
             steps {
                 script {
                     def APP_IMAGE_NAME = "practica-final-backend"
