@@ -34,14 +34,14 @@ spec:
     }
 
     stages {
-        stage('Prepare environment') {
-            steps {
-                container("shell") {
-                    sh 'java -version'
-                    sh 'mvn --version'
-                }
-            }
-        }
+        // stage('Prepare environment') {
+        //     steps {
+        //         container("shell") {
+        //             sh 'java -version'
+        //             sh 'mvn --version'
+        //         }
+        //     }
+        // }
         stage('Code Promotion') {
             when {
                 branch 'master'
@@ -76,21 +76,21 @@ spec:
                 }
             }
         }
-        stage("Unit Tests") {
-            steps {
-                container("shell") {
-                    sh "mvn test"
-                    junit "target/surefire-reports/*.xml"
-                }
-            }
-        }
-        stage("JaCoCo Tests") {
-            steps {
-                container("shell") {
-                    jacoco()
-                }
-            }
-        }
+        // stage("Unit Tests") {
+        //     steps {
+        //         container("shell") {
+        //             sh "mvn test"
+        //             junit "target/surefire-reports/*.xml"
+        //         }
+        //     }
+        // }
+        // stage("JaCoCo Tests") {
+        //     steps {
+        //         container("shell") {
+        //             jacoco()
+        //         }
+        //     }
+        // }
         stage("Quality Tests") {
             steps {
                 container("shell") {
