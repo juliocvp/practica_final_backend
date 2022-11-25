@@ -4,8 +4,8 @@ ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
 
 RUN echo "PWD is: $PWD"
 
-RUN echo $(ls -1a workspace)
+RUN echo $(ls -1a home)
 
-COPY ./workspace/Practica_Final_Backend_develop/target/spring-boot-jpa-h2-*.jar app.jar
+COPY ./home/jenkins/agent/workspace/Practica_Final_Backend_develop/target/spring-boot-jpa-h2-*.jar app.jar
 
 CMD java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar
