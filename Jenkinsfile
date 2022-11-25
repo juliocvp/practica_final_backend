@@ -13,6 +13,12 @@ spec:
       name: docker-socket-volume
     securityContext:
       privileged: true
+  - name: "kaniko"
+    image: "gcr.io/kaniko-project/executor:debug"
+    command:
+    - "cat"
+    imagePullPolicy: "IfNotPresent"
+    tty: true
   volumes:
   - name: docker-socket-volume
     hostPath:
@@ -30,8 +36,10 @@ spec:
     stages {
         stage('Prepare environment') {
             steps {
-                sh 'java -version'
-                sh 'mvn --version'
+                container("shell") {
+                    sh 'java -version'
+                    sh 'mvn --version'
+                }
             }
         }
         stage('Code Promotion') {
@@ -41,43 +49,53 @@ spec:
             }
             steps {
                 script {
-                    echo 'Checking pom version'
-                    pom = readMavenPom file: "pom.xml"
-                    if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
-                        echo 'Removing -SNAPSHOT suffix'
-                        pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
-                        writeMavenPom file: "pom.xml", model: pom
+                    container("shell") {
+                        echo 'Checking pom version'
+                        pom = readMavenPom file: "pom.xml"
+                        if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
+                            echo 'Removing -SNAPSHOT suffix'
+                            pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
+                            writeMavenPom file: "pom.xml", model: pom
 
-                        echo 'Pushing changes to repo'
-                        sh 'git show-ref'
-                        sh 'git add .'
-                        sh 'git commit -m "Removing -SNAPSHOT suffix"'
-                        //sh ' git push origin master'
-                    } else {
-                        echo 'Correct pom version'
+                            echo 'Pushing changes to repo'
+                            sh 'git show-ref'
+                            sh 'git add .'
+                            sh 'git commit -m "Removing -SNAPSHOT suffix"'
+                            //sh ' git push origin master'
+                        } else {
+                            echo 'Correct pom version'
+                        }
                     }
                 }
             }
         }
         stage('Compile') {
             steps {
-                sh "mvn clean compile -DskipTest"
+                container("shell") {
+                    sh "mvn clean compile -DskipTest"
+                }
             }
         }
         stage("Unit Tests") {
             steps {
-                sh "mvn test"
-                junit "target/surefire-reports/*.xml"
+                container("shell") {
+                    sh "mvn test"
+                    junit "target/surefire-reports/*.xml"
+                }
             }
         }
         stage("JaCoCo Tests") {
             steps {
-                jacoco()
+                container("shell") {
+                    jacoco()
+                }
             }
         }
         stage("Quality Tests") {
             steps {
-                echo 'Saltado por velocidad'
+                container("shell") {
+                    echo 'Saltado por velocidad'
+                }
                 //withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
                     //sh "mvn clean verify sonar:sonar -DskipTests"
                 //}
@@ -85,32 +103,12 @@ spec:
         }
         stage('Package') {
             steps {
-                sh "mvn package -DskipTests"
+                container("shell") {
+                    sh "mvn package -DskipTests"
+                }
             }
         }
         stage('Build & Push') {
-            agent {
-                kubernetes {
-                    yaml '''
-            apiVersion: v1
-            kind: Pod
-            metadata:
-                labels:
-                    name: "kaniko"
-            spec:
-                containers:
-                - name: "kaniko"
-                  image: "gcr.io/kaniko-project/executor:debug"
-                  command:
-                  - "cat"
-                  imagePullPolicy: "IfNotPresent"
-                  tty: true
-            '''
-                }
-            }
-            options {
-                skipDefaultCheckout()
-            } 
             steps {
                 script {
                     def APP_IMAGE_NAME = "practica-final-backend"
