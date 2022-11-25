@@ -125,7 +125,7 @@ spec:
                                 ${command}
                                 set -x
                                 """)
-                            sh "/kaniko/executor --dockerfile Dockerfile --context git://github.com/komljen/dockerfile-examples.git#refs/heads/master# --destination ${DOCKER_HUB_USER}/${APP_IMAGE_NAME}:${APP_IMAGE_TAG} --cleanup"
+                            sh "/kaniko/executor --dockerfile $(pwd)/Dockerfile --context git://github.com/komljen/dockerfile-examples.git#refs/heads/master# --destination ${DOCKER_HUB_USER}/${APP_IMAGE_NAME}:${APP_IMAGE_TAG} --cleanup"
                         }
                     }
 
