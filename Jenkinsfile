@@ -121,12 +121,14 @@ spec:
             steps {
                 sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
 
-                filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
-                data = readYaml file: filename
-                pom = readMavenPom file: "pom.xml"
-                data.image = "juliocvp/practica-final-backend:"+pom.version
-                sh "rm $filename"
-                writeYaml file: filename, data: data
+                script {
+                    filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
+                    data = readYaml file: filename
+                    pom = readMavenPom file: "pom.xml"
+                    data.image = "juliocvp/practica-final-backend:"+pom.version
+                    sh "rm $filename"
+                    writeYaml file: filename, data: data
+                }
 
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
