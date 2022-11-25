@@ -111,8 +111,9 @@ spec:
         stage('Build & Push') {
             steps {
                 script {
-                    def APP_IMAGE_NAME = "practica-final-backend"
-                    def APP_IMAGE_TAG = "latest"
+                    APP_IMAGE_NAME = "practica-final-backend"
+                    pom = readMavenPom file: "pom.xml"
+                    APP_IMAGE_TAG = pom.version
 
                     container("kaniko") {
                         sh 'pwd'
