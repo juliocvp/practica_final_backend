@@ -72,7 +72,7 @@ spec:
         stage('Compile') {
             steps {
                 container("shell") {
-                    sh "mvn clean compile -DskipTest"
+                    sh "mvn compile -DskipTest"
                 }
             }
         }
