@@ -77,6 +77,7 @@ spec:
         }
         stage("Quality Tests") {
             steps {
+                echo 'Saltado por velocidad'
                 //withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
                     //sh "mvn clean verify sonar:sonar -DskipTests"
                 //}
