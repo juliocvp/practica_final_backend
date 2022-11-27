@@ -32,7 +32,6 @@ spec:
             defaultContainer 'shell'
         }
     }
-
     stages {
         stage('Prepare environment') {
             steps {
@@ -83,7 +82,6 @@ spec:
         // }
         // stage("Quality Tests") {
         //     steps {
-        //         echo 'Saltado por velocidad'
         //         //withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
         //             //sh "mvn clean verify sonar:sonar -DskipTests"
         //         //}
@@ -121,19 +119,100 @@ spec:
             steps {
                 sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
 
-                script {
-                    filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
-                    data = readYaml file: filename
-                    pom = readMavenPom file: "pom.xml"
-                    data.image = "juliocvp/practica-final-backend:"+pom.version
-                    sh "rm $filename"
-                    writeYaml file: filename, data: data
-                }
+                // script {
+                //     filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
+                //     data = readYaml file: filename
+                //     pom = readMavenPom file: "pom.xml"
+                //     data.image = "juliocvp/practica-final-backend:"+pom.version
+                //     sh "rm $filename"
+                //     writeYaml file: filename, data: data
+                // }
 
-                sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
+                // sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
 
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
+        }
+        // stage ("Performance Test") {
+        //     steps{
+        //         script {
+        //             sh 'git clone https://github.com/juliocvp/jmeter-docker.git'
+        //             dir('jmeter-docker') {
+        //                 // Setup
+        //                 sh 'wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.tgz'
+        //                 sh 'tar xvf apache-jmeter-5.5.tgz'
+        //                 sh 'cp plugins/*.jar apache-jmeter-5.5/lib/ext'
+        //                 sh 'mkdir test'
+        //                 sh 'mkdir apache-jmeter-5.5/test'
+        //                 sh 'cp ../src/main/resources/*.jmx apache-jmeter-5.5/test/'
+        //                 sh 'chmod +775 ./build.sh && chmod +775 ./run.sh && chmod +775 ./entrypoint.sh'
+        //                 sh 'rm -r apache-jmeter-5.5.tgz'
+        //                 sh 'tar -czvf apache-jmeter-5.5.tgz apache-jmeter-5.5'
+        //                 sh './build.sh'
+        //                 sh 'rm -r apache-jmeter-5.5 && rm -r apache-jmeter-5.5.tgz'
+        //                 sh 'cp ../src/main/resources/perform_test.jmx test'
+        //                 // Run
+        //                 sh './run.sh -n -t test/perform_test.jmx -l test/perform_test.jtl'
+        //                 sh 'docker cp jmeter:/home/jmeter/apache-jmeter-5.5/test/perform_test.jtl $(pwd)/test'
+        //                 perfReport './test/perform_test.jtl'
+        //                 BlazeMeterTest: {
+        //                     sh 'bzt ./test/perform_test.jtl -report'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // stage("Nexus") {
+        //     steps {
+        //         script {
+        //             // Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
+        //             pom = readMavenPom file: "pom.xml"
+        //             // Find built artifact under target folder
+        //             filesByGlob = findFiles(glob: "target/*.${pom.packaging}")
+        //             // Print some info from the artifact found
+        //             echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+        //             // Extract the path from the File found
+        //             artifactPath = filesByGlob[0].path
+        //             // Assign to a boolean response verifying If the artifact name exists
+        //             artifactExists = fileExists artifactPath                    
+        //             if(artifactExists) {
+        //                 echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}"                   
+        //                 nexusArtifactUploader(
+        //                     nexusVersion: NEXUS_VERSION,
+        //                     protocol: NEXUS_PROTOCOL,
+        //                     nexusUrl: NEXUS_URL,
+        //                     groupId: pom.groupId,
+        //                     version: pom.version,
+        //                     repository: NEXUS_REPOSITORY,
+        //                     credentialsId: NEXUS_CREDENTIAL_ID,
+        //                     artifacts: [
+        //                         // Artifact generated such as .jar, .ear and .war files.
+        //                         [artifactId: pom.artifactId,
+        //                         classifier: "",
+        //                         file: artifactPath,
+        //                         type: pom.packaging],
+        //                         // Lets upload the pom.xml file for additional information for Transitive dependencies
+        //                         [artifactId: pom.artifactId,
+        //                         classifier: "",
+        //                         file: "pom.xml",
+        //                         type: "pom"]
+        //                     ]
+        //                 )                    
+        //             } else {
+        //                 error "*** File: ${artifactPath}, could not be found"
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Deploy') {
+        //     steps {
+        //         echo 'Pendiente Opcional'
+        //     }
+        // }
+    }
+    post {
+        always {
+          echo 'Post always'
         }
     }
 }
