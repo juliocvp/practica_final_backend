@@ -131,7 +131,6 @@ spec:
 
                 // sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
 
-                sh "kubectl delete --ignore-not-found=true -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml"
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
         }
