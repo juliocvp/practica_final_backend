@@ -131,7 +131,7 @@ spec:
 
                 // sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
 
-                sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
+                sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --namespace=jenkins-project --kubeconfig=configuracion/kubernetes-config/config"
                 sh "kubectl port-forward -n default deployment/spring-boot-app 30001:8080"
             }
         }
