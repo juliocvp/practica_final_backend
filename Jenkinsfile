@@ -130,7 +130,7 @@ spec:
 
                 // sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
 
-                sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml -n default --kubeconfig=configuracion/kubernetes-config/config"
+                sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --namespace=jenkins-project --kubeconfig=configuracion/kubernetes-config/config"
             }
         }
         // stage ("Performance Test") {
