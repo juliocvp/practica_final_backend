@@ -98,6 +98,7 @@ spec:
                     APP_IMAGE_NAME = "practica-final-backend"
                     pom = readMavenPom file: "pom.xml"
                     APP_IMAGE_TAG = pom.version
+                    APP_IMAGE_TAG = "latest"
 
                     container("kaniko") {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
