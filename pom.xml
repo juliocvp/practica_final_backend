@@ -27,7 +27,7 @@
             <properties>
                 <!-- Optional URL to server. Default value is http://localhost:9000 -->
                 <sonar.host.url>
-                    https://sonarqube.loca.lt
+                    https://sonarjcvp.loca.lt
                 </sonar.host.url>
                 <sonar.login>squ_b5cc6f83381916bbcada6548fb0b6e8762850e88</sonar.login>
             </properties>
