@@ -39,7 +39,7 @@
             </collectionProp>
           </elementProp>
           <!-- CAMBIAR URL POR LA DEL TUNEL -->
-          <stringProp name="HTTPSampler.domain">908b-213-0-57-163.eu.ngrok</stringProp>
+          <stringProp name="HTTPSampler.domain">908b-213-0-57-163.eu.ngrok.io</stringProp>
           <stringProp name="HTTPSampler.port">80</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>

@@ -136,6 +136,7 @@ spec:
         }
         stage ("Performance Test") {
             steps{
+                sleep 30
                 script {
                     sh 'git clone https://github.com/juliocvp/jmeter-docker.git'
                     dir('jmeter-docker') {
