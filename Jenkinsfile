@@ -56,14 +56,15 @@ spec:
                     echo 'Checking pom version'
                     pom = readMavenPom file: "pom.xml"
                     if((pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").find(0)) {
-                        echo 'Removing -SNAPSHOT suffix'
-                        pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
-                        writeMavenPom file: "pom.xml", model: pom
-                        echo 'Pushing changes to repo'
-                        sh 'ls -la'
                         //github-credentials-pat
                         withCredentials([gitUsernamePassword(credentialsId: 'github-credentials-pat', gitToolName: 'git-tool')]) {
-                            sh 'git status'
+                            sh 'git checkout master'
+                            echo 'Removing -SNAPSHOT suffix'
+                            pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
+                            writeMavenPom file: "pom.xml", model: pom
+                            echo 'Pushing changes to repo'
+                            sh 'ls -la'
+                            // sh 'git status'
                             sh 'git add pom.xml'
                             sh 'git commit -m "Removing -SNAPSHOT suffix"'
                             sh 'git push origin master'
