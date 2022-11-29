@@ -60,14 +60,12 @@ spec:
                         pom.version = (pom.version =~ "[-](SNAPSHOT)|[-](snapshot)").replaceAll("")
                         writeMavenPom file: "pom.xml", model: pom
                         echo 'Pushing changes to repo'
-                        dir('practica_final_backend'){
-                            sh 'ls -la'
-                            //github-credentials-pat
-                            withCredentials([gitUsernamePassword(credentialsId: 'github-credentials-pat', gitToolName: 'git-tool')]) {
-                                sh 'git add pom.xml'
-                                sh 'git commit -m "Removing -SNAPSHOT suffix"'
-                                sh 'git push origin master'
-                            }
+                        sh 'ls -la'
+                        //github-credentials-pat
+                        withCredentials([gitUsernamePassword(credentialsId: 'github-credentials-pat', gitToolName: 'git-tool')]) {
+                            sh 'git add pom.xml'
+                            sh 'git commit -m "Removing -SNAPSHOT suffix"'
+                            sh 'git push origin master'
                         }
                     } else {
                         echo 'Correct pom version'
