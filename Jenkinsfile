@@ -75,11 +75,11 @@ spec:
                 }
             }
         }
-    //     stage('Compile') {
-    //         steps {
-    //             sh "mvn compile -DskipTest"
-    //         }
-    //     }
+        stage('Compile') {
+            steps {
+                sh "mvn compile -DskipTest"
+            }
+        }
     //     stage("Unit Tests") {
     //         steps {
     //             sh "mvn test"
