@@ -134,11 +134,9 @@ spec:
                     data.image = "juliocvp/practica-final-backend:"+pom.version
                     sh "rm $filename"
                     writeYaml file: filename, data: data
+                    sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
+                    sh 'cat ./configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
                 }
-
-                sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
-                sh 'cat ./configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
-
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
         }
