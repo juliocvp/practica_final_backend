@@ -128,10 +128,13 @@ spec:
                 sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
 
                 script {
+                    echo 'entro script'
                     filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
                     data = readYaml file: filename
                     pom = readMavenPom file: "pom.xml"
-                    data.image = "juliocvp/practica-final-backend:"+pom.version
+                    echo 'before image'
+                    data.spec.template.spec.containers.image = "juliocvp/practica-final-backend:"+pom.version
+                    echo 'after image'
                     sh "rm $filename"
                     writeYaml file: filename, data: data
                     sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
