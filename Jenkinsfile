@@ -99,78 +99,78 @@ spec:
                 sh "mvn clean package -DskipTests"
             }
         }
-        // stage('Build & Push') {
-        //     steps {
-        //         script {
-        //             APP_IMAGE_NAME = "practica-final-backend"
-        //             pom = readMavenPom file: "pom.xml"
-        //             APP_IMAGE_TAG = pom.version
-        //             APP_IMAGE_TAG = "latest"
+        stage('Build & Push') {
+            steps {
+                script {
+                    APP_IMAGE_NAME = "practica-final-backend"
+                    pom = readMavenPom file: "pom.xml"
+                    APP_IMAGE_TAG = pom.version
+                    APP_IMAGE_TAG = "latest"
 
-        //             container("kaniko") {
-        //                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
-        //                     AUTH = sh(script: """echo -n "${DOCKER_HUB_USER}:${DOCKER_HUB_PASS}" | base64""", returnStdout: true).trim()
-        //                     command = """echo '{"auths": {"https://index.docker.io/v1/": {"auth": "${AUTH}"}}}' >> /kaniko/.docker/config.json"""
-        //                     sh("""
-        //                         set +x
-        //                         ${command}
-        //                         set -x
-        //                         """)
-        //                     sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination ${DOCKER_HUB_USER}/${APP_IMAGE_NAME}:${APP_IMAGE_TAG} --cleanup"
-        //                 }
-        //             }
+                    container("kaniko") {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
+                            AUTH = sh(script: """echo -n "${DOCKER_HUB_USER}:${DOCKER_HUB_PASS}" | base64""", returnStdout: true).trim()
+                            command = """echo '{"auths": {"https://index.docker.io/v1/": {"auth": "${AUTH}"}}}' >> /kaniko/.docker/config.json"""
+                            sh("""
+                                set +x
+                                ${command}
+                                set -x
+                                """)
+                            sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination ${DOCKER_HUB_USER}/${APP_IMAGE_NAME}:${APP_IMAGE_TAG} --cleanup"
+                        }
+                    }
 
-        //         }
-        //     }
-        // }
-        // stage('Run test environment') {
-        //     steps {
-        //         sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
+                }
+            }
+        }
+        stage('Run test environment') {
+            steps {
+                sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
 
-        //         // script {
-        //         //     filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
-        //         //     data = readYaml file: filename
-        //         //     pom = readMavenPom file: "pom.xml"
-        //         //     data.image = "juliocvp/practica-final-backend:"+pom.version
-        //         //     sh "rm $filename"
-        //         //     writeYaml file: filename, data: data
-        //         // }
+                // script {
+                //     filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
+                //     data = readYaml file: filename
+                //     pom = readMavenPom file: "pom.xml"
+                //     data.image = "juliocvp/practica-final-backend:"+pom.version
+                //     sh "rm $filename"
+                //     writeYaml file: filename, data: data
+                // }
 
-        //         // sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
+                // sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
 
-        //         sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
-        //     }
-        // }
-        // stage ("Performance Test") {
-        //     steps{
-        //         sleep 30
-        //         script {
-        //             sh 'git clone https://github.com/juliocvp/jmeter-docker.git'
-        //             dir('jmeter-docker') {
-        //                 // Setup
-        //                 sh 'wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.tgz'
-        //                 sh 'tar xvf apache-jmeter-5.5.tgz'
-        //                 sh 'cp plugins/*.jar apache-jmeter-5.5/lib/ext'
-        //                 sh 'mkdir test'
-        //                 sh 'mkdir apache-jmeter-5.5/test'
-        //                 sh 'cp ../src/main/resources/*.jmx apache-jmeter-5.5/test/'
-        //                 sh 'chmod +775 ./build.sh && chmod +775 ./run.sh && chmod +775 ./entrypoint.sh'
-        //                 sh 'rm -r apache-jmeter-5.5.tgz'
-        //                 sh 'tar -czvf apache-jmeter-5.5.tgz apache-jmeter-5.5'
-        //                 sh './build.sh'
-        //                 sh 'rm -r apache-jmeter-5.5 && rm -r apache-jmeter-5.5.tgz'
-        //                 sh 'cp ../src/main/resources/perform_test.jmx test'
-        //                 // Run
-        //                 sh './run.sh -n -t test/perform_test.jmx -l test/perform_test.jtl'
-        //                 sh 'docker cp jmeter:/home/jmeter/apache-jmeter-5.5/test/perform_test.jtl $(pwd)/test'
-        //                 perfReport './test/perform_test.jtl'
-        //                 BlazeMeterTest: {
-        //                     sh 'bzt ./test/perform_test.jtl -report'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+                sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
+            }
+        }
+        stage ("Performance Test") {
+            steps{
+                sleep 30
+                script {
+                    sh 'git clone https://github.com/juliocvp/jmeter-docker.git'
+                    dir('jmeter-docker') {
+                        // Setup
+                        sh 'wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.tgz'
+                        sh 'tar xvf apache-jmeter-5.5.tgz'
+                        sh 'cp plugins/*.jar apache-jmeter-5.5/lib/ext'
+                        sh 'mkdir test'
+                        sh 'mkdir apache-jmeter-5.5/test'
+                        sh 'cp ../src/main/resources/*.jmx apache-jmeter-5.5/test/'
+                        sh 'chmod +775 ./build.sh && chmod +775 ./run.sh && chmod +775 ./entrypoint.sh'
+                        sh 'rm -r apache-jmeter-5.5.tgz'
+                        sh 'tar -czvf apache-jmeter-5.5.tgz apache-jmeter-5.5'
+                        sh './build.sh'
+                        sh 'rm -r apache-jmeter-5.5 && rm -r apache-jmeter-5.5.tgz'
+                        sh 'cp ../src/main/resources/perform_test.jmx test'
+                        // Run
+                        sh './run.sh -n -t test/perform_test.jmx -l test/perform_test.jtl'
+                        sh 'docker cp jmeter:/home/jmeter/apache-jmeter-5.5/test/perform_test.jtl $(pwd)/test'
+                        perfReport './test/perform_test.jtl'
+                        BlazeMeterTest: {
+                            sh 'bzt ./test/perform_test.jtl -report'
+                        }
+                    }
+                }
+            }
+        }
         stage("Nexus") {
             steps {
                 script {
