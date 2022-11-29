@@ -131,7 +131,6 @@ spec:
                     echo 'entro script'
                     // filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
                     // data = readYaml file: filename
-                    // pom = readMavenPom file: "pom.xml"
                     // echo 'before image'
                     // data.spec.template.spec.containers = ['name':'spring-boot-app',
                     // 'image': "juliocvp/practica-final-backend:"+pom.version,
@@ -139,6 +138,7 @@ spec:
                     // echo 'after image'
                     // sh "rm $filename"
                     // writeYaml file: filename, data: data
+                    pom = readMavenPom file: "pom.xml"
 
                     def imagen = "juliocvp/practica-final-backend:"+pom.version
 
