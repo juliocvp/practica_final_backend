@@ -219,11 +219,11 @@ spec:
     //             echo 'Pendiente Opcional'
     //         }
     //     }
-    // }
-    // post {
-    //     always {
-    //       echo 'Post always'
-    //       sh 'docker logout'
-    //     }
-    // }
+    }
+    post {
+        always {
+          echo 'Post always'
+        //   sh 'docker logout'
+        }
+    }
 }
