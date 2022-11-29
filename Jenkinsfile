@@ -133,7 +133,9 @@ spec:
                     data = readYaml file: filename
                     pom = readMavenPom file: "pom.xml"
                     echo 'before image'
-                    data.spec.template.spec.containers.image = "juliocvp/practica-final-backend:"+pom.version
+                    data.spec.template.spec.containers = ['name':'spring-boot-app',
+                    'image': "juliocvp/practica-final-backend:"+pom.version,
+                    'imagePullPolicy':'Always']
                     echo 'after image'
                     sh "rm $filename"
                     writeYaml file: filename, data: data
