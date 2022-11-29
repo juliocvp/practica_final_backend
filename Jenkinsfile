@@ -63,6 +63,7 @@ spec:
                         sh 'ls -la'
                         //github-credentials-pat
                         withCredentials([gitUsernamePassword(credentialsId: 'github-credentials-pat', gitToolName: 'git-tool')]) {
+                            sh 'git status'
                             sh 'git add pom.xml'
                             sh 'git commit -m "Removing -SNAPSHOT suffix"'
                             sh 'git push origin master'
