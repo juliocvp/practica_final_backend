@@ -129,16 +129,21 @@ spec:
 
                 script {
                     echo 'entro script'
-                    filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
-                    data = readYaml file: filename
-                    pom = readMavenPom file: "pom.xml"
-                    echo 'before image'
-                    data.spec.template.spec.containers = ['name':'spring-boot-app',
-                    'image': "juliocvp/practica-final-backend:"+pom.version,
-                    'imagePullPolicy':'Always']
-                    echo 'after image'
-                    sh "rm $filename"
-                    writeYaml file: filename, data: data
+                    // filename = 'configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
+                    // data = readYaml file: filename
+                    // pom = readMavenPom file: "pom.xml"
+                    // echo 'before image'
+                    // data.spec.template.spec.containers = ['name':'spring-boot-app',
+                    // 'image': "juliocvp/practica-final-backend:"+pom.version,
+                    // 'imagePullPolicy':'Always']
+                    // echo 'after image'
+                    // sh "rm $filename"
+                    // writeYaml file: filename, data: data
+
+                    def imagen = "juliocvp/practica-final-backend:"+pom.version
+
+                    sh("sed -i.bak 's#IMAGE_NAME#${imagen}#' ./configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml")
+
                     sh 'ls -la ./configuracion/kubernetes-deployments/practica-final-backend/'
                     sh 'cat ./configuracion/kubernetes-deployments/practica-final-backend/deployment.yaml'
                 }
